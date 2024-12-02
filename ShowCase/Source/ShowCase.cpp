@@ -14,7 +14,7 @@ ShowCase::ShowCase()
 
     DebugText.setFont(Font);
     DebugText.setCharacterSize(16);
-    DebugText.setFillColor(sf::Color::White);
+    DebugText.setFillColor(sf::Color::Green);
     DebugText.setPosition(10.f, 10.f);
 }
 
