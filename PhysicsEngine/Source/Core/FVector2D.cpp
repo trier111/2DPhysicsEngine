@@ -67,7 +67,10 @@ float FVector2D::LengthSquared() const
 FVector2D FVector2D::Normalized() const 
 {
     float len = Length();
-    if (len == 0) return FVector2D(0, 0);
+    if (len == 0)
+    {
+        return FVector2D(0, 0);
+    }
 
     return *this / len;
 }
