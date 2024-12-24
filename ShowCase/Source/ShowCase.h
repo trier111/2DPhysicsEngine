@@ -1,8 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Core/Engine.h"
 #include "Defines.h"
+#include "Core/Engine.h"
+#include "Shape.h"
 
 class ShowCase
 {
@@ -28,4 +29,17 @@ private:
     void Update();
 
     void Render();
+
+    void DrawAllShapes();
+
+    void SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic);
+
+    void SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic);
+
+    void SpawnLevel();
+
+private:
+
+    std::vector<std::unique_ptr<Shape>> Shapes;
+
 };
