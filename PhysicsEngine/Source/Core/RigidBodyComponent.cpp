@@ -4,7 +4,7 @@
 #include "Core/IRigidBodyObserver.h"
 
 RigidBodyComponent::RigidBodyComponent()
-    : Mass(100.0f),
+    : Mass(1.0f),
     Velocity(FVector2D(0.0f, 0.0f)),
     Acceleration(FVector2D(0.0f, 0.0f)),
     bIsDynamic(true)
@@ -22,11 +22,13 @@ void RigidBodyComponent::Update(float DeltaTime)
         return;
     }
 
-    Velocity += Acceleration * DeltaTime;
+    Velocity += (Acceleration / Mass) * DeltaTime;
 
     Velocity = Velocity * (1.0f - EngineConfig::DAMPING_FACTOR * DeltaTime);
 
     Position += Velocity * DeltaTime;
+
+    Acceleration = FVector2D(0.f, 0.f);
 
     NotifyObservers();
 }
@@ -96,6 +98,13 @@ float RigidBodyComponent::GetMass() const
 FVector2D RigidBodyComponent::GetPosition() const
 {
     return Position;
+}
+
+void RigidBodyComponent::SetPosition(const FVector2D& NewPosition)
+{
+    Position = NewPosition;
+
+    NotifyObservers();
 }
 
 FVector2D RigidBodyComponent::GetVelocity() const

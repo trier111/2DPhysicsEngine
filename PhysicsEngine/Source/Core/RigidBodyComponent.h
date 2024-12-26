@@ -34,6 +34,8 @@ public:
 
     FVector2D GetPosition() const;
 
+    void SetPosition(const FVector2D& NewPosition);
+
     void SetDynamic(bool bDynamic);
 
     bool IsDynamic() const;
