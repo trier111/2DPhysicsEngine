@@ -5,7 +5,8 @@
 AABB::AABB(AABBComponent* InAABBComponent) : PhysicalAABB(InAABBComponent)
 {
     RectangleShape.setSize(sf::Vector2f(PhysicalAABB->GetWidth(), PhysicalAABB->GetHeight()));
-    RectangleShape.setOrigin(PhysicalAABB->GetWidth() / 2, PhysicalAABB->GetHeight() / 2);
+    //RectangleShape.setOrigin(PhysicalAABB->GetWidth() / 2, PhysicalAABB->GetHeight() / 2);
+    RectangleShape.setOrigin(0, 0);
     RectangleShape.setPosition(PhysicalAABB->GetPosition().X, PhysicalAABB->GetPosition().Y);
     RectangleShape.setFillColor(sf::Color::Red);
 
