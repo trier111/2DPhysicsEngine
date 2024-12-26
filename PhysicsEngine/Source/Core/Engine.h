@@ -39,6 +39,8 @@ private:
 
     static void ResolveCollision(RigidBodyComponent& BodyA, RigidBodyComponent& BodyB, const FVector2D& CollisionNormal);
 
+    static void PositionalCorrection(RigidBodyComponent& BodyA, RigidBodyComponent& BodyB, const FVector2D& CollisionNormal, float PenetrationDepth);
+
 private:
 
     std::vector<RigidBodyComponent*> RigidBodies;

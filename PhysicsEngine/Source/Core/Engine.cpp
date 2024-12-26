@@ -1,5 +1,6 @@
 #include "Engine.h"
 
+#include <cmath>
 #include "Core/AABBComponent.h"
 #include "Core/CircleComponent.h"
 #include "Core/Defines.h"
@@ -45,26 +46,36 @@ void Engine::HandleCollision(CircleComponent& Circle,AABBComponent& aabb)
     float DistanceX = Circle.GetPosition().X - ClosestX;
     float DistanceY = Circle.GetPosition().Y - ClosestY;
 
-    if ((DistanceX * DistanceX + DistanceY * DistanceY) <= (Circle.GetRadius() * Circle.GetRadius()))
+    float DistanceSquared = DistanceX * DistanceX + DistanceY * DistanceY;
+
+    if (DistanceSquared <= (Circle.GetRadius() * Circle.GetRadius()))
     {
+        float PenetrationDepth = Circle.GetRadius() - std::sqrt(DistanceSquared);
+
         FVector2D CollisionNormal = ComputeCollisionNormal(Circle.GetPosition(), FVector2D(ClosestX, ClosestY));
 
         ResolveCollision(Circle, aabb, CollisionNormal);
+
+        PositionalCorrection(Circle, aabb, CollisionNormal, PenetrationDepth);
     }
 }
 
 void Engine::HandleCollision(CircleComponent& Circle1,CircleComponent& Circle2)
 {
-    float distanceX = Circle1.GetPosition().X - Circle2.GetPosition().X;
-    float distanceY = Circle1.GetPosition().Y - Circle2.GetPosition().Y;
-    float distanceSquared = distanceX * distanceX + distanceY * distanceY;
+    float DistanceX = Circle1.GetPosition().X - Circle2.GetPosition().X;
+    float DistanceY = Circle1.GetPosition().Y - Circle2.GetPosition().Y;
+    float DistanceSquared = DistanceX * DistanceX + DistanceY * DistanceY;
 
-    float combinedRadius = Circle1.GetRadius() + Circle2.GetRadius();
-    if (distanceSquared <= (combinedRadius * combinedRadius))
+    float CombinedRadius = Circle1.GetRadius() + Circle2.GetRadius();
+    if (DistanceSquared <= (CombinedRadius * CombinedRadius))
     {
+        float PenetrationDepth = CombinedRadius - std::sqrt(DistanceSquared);
+
         FVector2D CollisionNormal = ComputeCollisionNormal(Circle1.GetPosition(), Circle2.GetPosition());
 
         ResolveCollision(Circle1, Circle2, CollisionNormal);
+
+        PositionalCorrection(Circle1, Circle2, CollisionNormal, PenetrationDepth);
     }
 }
 
@@ -78,7 +89,17 @@ void Engine::HandleCollision(AABBComponent& aabb1,AABBComponent& aabb2)
 
     if (isOverlappingX && isOverlappingY)
     {
+        float PenetrationDepthX = std::min(aabb1.GetPosition().X + aabb1.GetWidth() - aabb2.GetPosition().X,
+            aabb2.GetPosition().X + aabb2.GetWidth() - aabb1.GetPosition().X);
+
+        float PenetrationDepthY = std::min(aabb1.GetPosition().Y + aabb1.GetHeight() - aabb2.GetPosition().Y,
+            aabb2.GetPosition().Y + aabb2.GetHeight() - aabb1.GetPosition().Y);
+
+        float PenetrationDepth = std::min(PenetrationDepthX, PenetrationDepthY);
+
         FVector2D CollisionNormal = ComputeCollisionNormal(aabb1.GetPosition(), aabb2.GetPosition());
+
+        PositionalCorrection(aabb1, aabb2, CollisionNormal, PenetrationDepth);
 
         ResolveCollision(aabb1, aabb2, CollisionNormal);
     }
@@ -140,3 +161,18 @@ void Engine::ResolveCollision(RigidBodyComponent& BodyA, RigidBodyComponent& Bod
     }
 }
 
+void Engine::PositionalCorrection(RigidBodyComponent& BodyA, RigidBodyComponent& BodyB, const FVector2D& CollisionNormal, float PenetrationDepth)
+{
+    const float CorrectionFactor = 1.f;
+    const FVector2D Correction = CollisionNormal * PenetrationDepth * CorrectionFactor;
+
+    if (BodyA.IsDynamic())
+    {
+        BodyA.SetPosition(BodyA.GetPosition() + Correction);
+    }
+
+    if (BodyB.IsDynamic())
+    {
+        BodyB.SetPosition(BodyB.GetPosition() - Correction);
+    }
+}
