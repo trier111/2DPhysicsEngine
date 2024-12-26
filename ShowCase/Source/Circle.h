@@ -11,7 +11,7 @@ class Circle : public Shape,
 
 public:
 
-    Circle(CircleComponent* InCircleComponent);
+    Circle(std::shared_ptr<CircleComponent> InCircleComponent);
 
     void Draw(sf::RenderWindow& window) override;
 

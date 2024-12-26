@@ -2,7 +2,7 @@
 
 #include "Core/AABBComponent.h"
 
-AABB::AABB(AABBComponent* InAABBComponent) : PhysicalAABB(InAABBComponent)
+AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent) : PhysicalAABB(InAABBComponent.get())
 {
     RectangleShape.setSize(sf::Vector2f(PhysicalAABB->GetWidth(), PhysicalAABB->GetHeight()));
     //RectangleShape.setOrigin(PhysicalAABB->GetWidth() / 2, PhysicalAABB->GetHeight() / 2);

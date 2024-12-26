@@ -9,8 +9,9 @@
 #include <sstream>
 #include <cassert>
 
-ShowCase::ShowCase()
-: Window(sf::VideoMode(ShowcaseConfig::WINDOW_WIDTH, ShowcaseConfig::WINDOW_HEIGHT), "Showcase with Physics Engine")
+ShowCase::ShowCase(): 
+    Window(sf::VideoMode(ShowcaseConfig::WINDOW_WIDTH, ShowcaseConfig::WINDOW_HEIGHT), "Showcase with Physics Engine"),
+    PhysicsEngine(Engine::GetInstance())
 {
     Window.setFramerateLimit(ShowcaseConfig::MAX_FPS);
 
@@ -88,7 +89,7 @@ void ShowCase::DrawAllShapes()
 
 void ShowCase::SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic)
 {
-    CircleComponent* NewCircleComponent = PhysicsEngine.CreateCircle(Radius, Position);
+    std::shared_ptr <CircleComponent> NewCircleComponent = PhysicsEngine.CreateCircle(Radius, Position);
     assert(NewCircleComponent && "Physic Circle Component failed to construct");
     NewCircleComponent->SetDynamic(IsDynamic);
 
@@ -99,7 +100,7 @@ void ShowCase::SpawnCircle(float Radius, const FVector2D& Position, bool IsDynam
 
 void ShowCase::SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic)
 {
-    AABBComponent* NewAABBComponent = PhysicsEngine.CreateAABB(Size, Position);
+    std::shared_ptr<AABBComponent> NewAABBComponent = PhysicsEngine.CreateAABB(Size, Position);
     assert(NewAABBComponent && "Physic Circle Component failed to construct");
     NewAABBComponent->SetDynamic(IsDynamic);
 
@@ -110,5 +111,5 @@ void ShowCase::SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool 
 
 void ShowCase::SpawnLevel()
 {
-    SpawnAABB(FVector2D(300.f, 50.f), FVector2D(800.f, 700.f), false);
+    SpawnAABB(FVector2D(300.f, 50.f), FVector2D(650.f, 700.f), false);
 }

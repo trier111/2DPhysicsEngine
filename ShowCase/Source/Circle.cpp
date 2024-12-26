@@ -2,7 +2,7 @@
 
 #include "Core/CircleComponent.h"
 
-Circle::Circle(CircleComponent* InCircleComponent) : PhysicalCircle(InCircleComponent)
+Circle::Circle(std::shared_ptr<CircleComponent> InCircleComponent) : PhysicalCircle(InCircleComponent.get())
 {
     CircleShape.setRadius(PhysicalCircle->GetRadius());
     CircleShape.setOrigin(PhysicalCircle->GetRadius(), PhysicalCircle->GetRadius());

@@ -18,7 +18,7 @@ private:
 
     sf::RenderWindow Window;
     sf::Clock Clock;
-    Engine PhysicsEngine;
+    Engine& PhysicsEngine;
     sf::Font Font;
     sf::Text DebugText;
 

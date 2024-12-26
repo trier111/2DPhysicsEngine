@@ -10,29 +10,34 @@ Engine::Engine() :
 {
 }
 
+Engine& Engine::GetInstance()
+{
+    static Engine EngineInstance;
+    return EngineInstance;
+}
+
 void Engine::Update(float DeltaTime)
 {
     CheckCollisions();
 
-    for (auto* Body : RigidBodies)
+    for (const auto& Body : RigidBodies)
     {
         Body->ApplyGravity(Gravity);
-
         Body->Update(DeltaTime);
     }
 }
 
-CircleComponent* Engine::CreateCircle(float Radius, const FVector2D& StartPosition)
+std::shared_ptr<CircleComponent> Engine::CreateCircle(float Radius, const FVector2D& StartPosition)
 {
-    CircleComponent* NewCircle = new CircleComponent(Radius, StartPosition);
+    auto NewCircle = std::make_shared<CircleComponent>(Radius, StartPosition);
     RigidBodies.push_back(NewCircle);
 
     return NewCircle;
 }
 
-AABBComponent* Engine::CreateAABB(const FVector2D& Size, const FVector2D& StartPosition)
+std::shared_ptr<AABBComponent> Engine::CreateAABB(const FVector2D& Size, const FVector2D& StartPosition)
 {
-    AABBComponent* NewAABB = new AABBComponent(Size, StartPosition);
+    auto NewAABB = std::make_shared<AABBComponent>(Size, StartPosition);
     RigidBodies.push_back(NewAABB);
 
     return NewAABB;
@@ -109,11 +114,11 @@ void Engine::CheckCollisions()
 {
     for (size_t i = 0; i < RigidBodies.size(); ++i)
     {
-        RigidBodyComponent* BodyA = RigidBodies[i];
+        std::shared_ptr<RigidBodyComponent> BodyA = RigidBodies[i];
 
         for (size_t j = i + 1; j < RigidBodies.size(); ++j)
         {
-            RigidBodyComponent* BodyB = RigidBodies[j];
+            std::shared_ptr<RigidBodyComponent> BodyB = RigidBodies[j];
 
             BodyA->CheckCollision(*BodyB);
         }

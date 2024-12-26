@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include "Core/FVector2D.h"
 
 class RigidBodyComponent;
@@ -11,17 +12,18 @@ class Engine
 {
 public:
 
-    Engine();
-    
-    ~Engine() {};
+    Engine(const Engine&) = delete;
+    Engine& operator=(const Engine&) = delete;
+
+    static Engine& GetInstance();
 
 public:
 
     void Update(float DeltaTime);
 
-    CircleComponent* CreateCircle(float Radius, const FVector2D& StartPosition);
+    std::shared_ptr<CircleComponent> CreateCircle(float Radius, const FVector2D& StartPosition);
 
-    AABBComponent* CreateAABB(const FVector2D& Size, const FVector2D& StartPosition);
+    std::shared_ptr<AABBComponent> CreateAABB(const FVector2D& Size, const FVector2D& StartPosition);
 
 public:
 
@@ -30,6 +32,10 @@ public:
     static void HandleCollision(CircleComponent& Ñircle1,CircleComponent& Ñircle2);
 
     static void HandleCollision(AABBComponent& aabb1,AABBComponent& aabb2);
+
+private:
+
+    Engine();
 
 private:
 
@@ -43,7 +49,7 @@ private:
 
 private:
 
-    std::vector<RigidBodyComponent*> RigidBodies;
+    std::vector<std::shared_ptr<RigidBodyComponent>> RigidBodies;
 
     FVector2D Gravity;
 
