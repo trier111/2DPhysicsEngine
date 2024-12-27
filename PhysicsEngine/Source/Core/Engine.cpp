@@ -179,16 +179,30 @@ void Engine::ResolveCollision(RigidBodyComponent& BodyA, RigidBodyComponent& Bod
 
 void Engine::PositionalCorrection(RigidBodyComponent& BodyA, RigidBodyComponent& BodyB, const FVector2D& CollisionNormal, float PenetrationDepth)
 {
-    const float CorrectionFactor = 1.f;
+    const float CorrectionFactor = 0.5f;
     const FVector2D Correction = CollisionNormal * PenetrationDepth * CorrectionFactor;
 
     if (BodyA.IsDynamic())
     {
-        BodyA.SetPosition(BodyA.GetPosition() + Correction);
+        if (!BodyB.IsDynamic())
+        {
+            BodyA.SetPosition(BodyA.GetPosition() + Correction * 2.0f);
+        }
+        else
+        {
+            BodyA.SetPosition(BodyA.GetPosition() + Correction);
+        }
     }
 
     if (BodyB.IsDynamic())
     {
-        BodyB.SetPosition(BodyB.GetPosition() - Correction);
+        if (!BodyA.IsDynamic())
+        {
+            BodyB.SetPosition(BodyB.GetPosition() - Correction * 2.0f);
+        }
+        else
+        {
+            BodyB.SetPosition(BodyB.GetPosition() - Correction);
+        }
     }
 }
