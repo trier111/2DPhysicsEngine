@@ -32,6 +32,8 @@ private:
 
     void DrawAllShapes();
 
+    void ClearMarkedShapes();
+
     void SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic);
 
     void SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic);

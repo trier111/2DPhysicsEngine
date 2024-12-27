@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Shape.h"
-#include "Core/IRigidBodyObserver.h"
+#include "Core/IRigidBodyPositionObserver.h"
 
 class CircleComponent;
 
 class Circle : public Shape,
-    public IRigidBodyObserver
+    public IRigidBodyPositionObserver
 {
 
 public:

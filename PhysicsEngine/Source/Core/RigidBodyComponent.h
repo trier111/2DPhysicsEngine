@@ -3,7 +3,8 @@
 #include "Core/FVector2D.h"
 #include <vector>
 
-class IRigidBodyObserver;
+class IRigidBodyPositionObserver;
+class IRigidBodyDestructionObserver;
 class CircleComponent;
 class AABBComponent;
 
@@ -40,6 +41,8 @@ public:
 
     bool IsDynamic() const;
 
+    bool IsMarkedForDeletion();
+
 public:
 
     virtual void CheckCollision(RigidBodyComponent& other) = 0;
@@ -48,8 +51,11 @@ public:
 
 public:
 
-    void AddObserver(IRigidBodyObserver* Observer);
-    void RemoveObserver(IRigidBodyObserver* Observer);
+    void AddPositionObserver(IRigidBodyPositionObserver* Observer);
+    void RemovePositionObserver(IRigidBodyPositionObserver* Observer);
+
+    void AddDestructionObserver(IRigidBodyDestructionObserver* Observer);
+    void RemoveDestructionObserver(IRigidBodyDestructionObserver* Observer);
 
 protected:
 
@@ -65,11 +71,19 @@ protected:
 
 private:
 
-    void NotifyObservers();
+    void MarkForDeletion();
+
+    void NotifyPositionObservers();
+    void NotifyDestructionObservers();
+
+    bool IsOutOfBounds();
 
 private:
 
-    std::vector<IRigidBodyObserver*> Observers;
+    std::vector<IRigidBodyPositionObserver*> PositionObservers;
+    std::vector<IRigidBodyDestructionObserver*> DestructionObservers;
+
+    bool bMarkedForDeletion;
 
 };
 

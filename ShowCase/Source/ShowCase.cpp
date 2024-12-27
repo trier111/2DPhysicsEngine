@@ -61,6 +61,7 @@ void ShowCase::Update()
 {
     float DeltaTime = Clock.restart().asSeconds();
     PhysicsEngine.Update(DeltaTime);
+    ClearMarkedShapes();
 
     std::ostringstream ss;
     ss << "Delta Time: " << DeltaTime;
@@ -83,6 +84,21 @@ void ShowCase::DrawAllShapes()
         if (shape) 
         {
             shape->Draw(Window);
+        }
+    }
+}
+
+void ShowCase::ClearMarkedShapes()
+{
+    for (auto it = Shapes.begin(); it != Shapes.end(); )
+    {
+        if (it->get()->IsMarkedForDeletion())
+        {
+            it = Shapes.erase(it);
+        }
+        else
+        {
+            ++it;
         }
     }
 }

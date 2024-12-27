@@ -20,10 +20,21 @@ void Engine::Update(float DeltaTime)
 {
     CheckCollisions();
 
-    for (const auto& Body : RigidBodies)
+    for (auto it = RigidBodies.begin(); it != RigidBodies.end(); )
     {
+        auto& Body = *it;
+
         Body->ApplyGravity(Gravity);
         Body->Update(DeltaTime);
+
+        if (Body->IsMarkedForDeletion())
+        {
+            it = RigidBodies.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 

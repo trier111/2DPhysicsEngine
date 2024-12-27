@@ -1,13 +1,15 @@
 #include "RigidBodyComponent.h"
 
 #include "Core/Defines.h"
-#include "Core/IRigidBodyObserver.h"
+#include "Core/IRigidBodyPositionObserver.h"
+#include "Core/IRigidBodyDestructionObserver.h"
 
 RigidBodyComponent::RigidBodyComponent()
     : Mass(1.0f),
     Velocity(FVector2D(0.0f, 0.0f)),
     Acceleration(FVector2D(0.0f, 0.0f)),
-    bIsDynamic(true)
+    bIsDynamic(true),
+    bMarkedForDeletion(false)
 {
 }
 
@@ -30,7 +32,13 @@ void RigidBodyComponent::Update(float DeltaTime)
 
     Acceleration = FVector2D(0.f, 0.f);
 
-    NotifyObservers();
+    NotifyPositionObservers();
+
+    if (IsOutOfBounds())
+    {
+        MarkForDeletion();
+    }
+
 }
 
 void RigidBodyComponent::ApplyForce(const FVector2D& Force)
@@ -61,9 +69,33 @@ void RigidBodyComponent::ApplyGravity(const FVector2D& Gravity)
     Acceleration += Gravity;
 }
 
-void RigidBodyComponent::NotifyObservers()
+void RigidBodyComponent::MarkForDeletion()
 {
-    for (IRigidBodyObserver* Observer : Observers)
+    bMarkedForDeletion = true;
+    NotifyDestructionObservers();
+}
+
+bool RigidBodyComponent::IsOutOfBounds()
+{
+    return Position.Y > EngineConfig::BOTTOMBOUND;
+}
+
+void RigidBodyComponent::AddPositionObserver(IRigidBodyPositionObserver* Observer)
+{
+    if (std::find(PositionObservers.begin(), PositionObservers.end(), Observer) == PositionObservers.end())
+    {
+        PositionObservers.push_back(Observer);
+    }
+}
+
+void RigidBodyComponent::RemovePositionObserver(IRigidBodyPositionObserver* Observer)
+{
+    PositionObservers.erase(std::remove(PositionObservers.begin(), PositionObservers.end(), Observer), PositionObservers.end());
+}
+
+void RigidBodyComponent::NotifyPositionObservers()
+{
+    for (IRigidBodyPositionObserver* Observer : PositionObservers)
     {
         if (Observer)
         {
@@ -72,17 +104,28 @@ void RigidBodyComponent::NotifyObservers()
     }
 }
 
-void RigidBodyComponent::AddObserver(IRigidBodyObserver* Observer)
+void RigidBodyComponent::AddDestructionObserver(IRigidBodyDestructionObserver* Observer)
 {
-    if (std::find(Observers.begin(), Observers.end(), Observer) == Observers.end())
+    if (std::find(DestructionObservers.begin(), DestructionObservers.end(), Observer) == DestructionObservers.end())
     {
-        Observers.push_back(Observer);
+        DestructionObservers.push_back(Observer);
     }
 }
 
-void RigidBodyComponent::RemoveObserver(IRigidBodyObserver* Observer)
+void RigidBodyComponent::RemoveDestructionObserver(IRigidBodyDestructionObserver* Observer)
 {
-    Observers.erase(std::remove(Observers.begin(), Observers.end(), Observer), Observers.end());
+    DestructionObservers.erase(std::remove(DestructionObservers.begin(), DestructionObservers.end(), Observer), DestructionObservers.end());
+}
+
+void RigidBodyComponent::NotifyDestructionObservers()
+{
+    for (IRigidBodyDestructionObserver* Observer : DestructionObservers)
+    {
+        if (Observer)
+        {
+            Observer->OnRigidBodyDestroyed();
+        }
+    }
 }
 
 void RigidBodyComponent::SetMass(float InMass)
@@ -104,7 +147,7 @@ void RigidBodyComponent::SetPosition(const FVector2D& NewPosition)
 {
     Position = NewPosition;
 
-    NotifyObservers();
+    NotifyPositionObservers();
 }
 
 FVector2D RigidBodyComponent::GetVelocity() const
@@ -126,4 +169,9 @@ void RigidBodyComponent::SetDynamic(bool bDynamic)
 bool RigidBodyComponent::IsDynamic() const
 {
     return bIsDynamic;
+}
+
+bool RigidBodyComponent::IsMarkedForDeletion()
+{
+    return bMarkedForDeletion;
 }

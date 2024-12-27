@@ -9,7 +9,8 @@ Circle::Circle(std::shared_ptr<CircleComponent> InCircleComponent) : PhysicalCir
     CircleShape.setPosition(PhysicalCircle->GetPosition().X, PhysicalCircle->GetPosition().Y);
     CircleShape.setFillColor(sf::Color::Green);
 
-    PhysicalCircle->AddObserver(this);
+    PhysicalCircle->AddPositionObserver(this);
+    PhysicalCircle->AddDestructionObserver(this);
 }
 
 void Circle::Draw(sf::RenderWindow& window)

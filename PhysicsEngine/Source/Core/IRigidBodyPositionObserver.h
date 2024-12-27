@@ -2,12 +2,11 @@
 
 class FVector2D;
 
-class IRigidBodyObserver
+class IRigidBodyPositionObserver
 {
 
 public:
 
-    virtual ~IRigidBodyObserver() = default;
-
     virtual void OnRigidBodyPositionUpdated(const FVector2D& NewPosition) = 0;
+
 };

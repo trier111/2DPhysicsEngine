@@ -10,7 +10,8 @@ AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent) : PhysicalAABB(InAAB
     RectangleShape.setPosition(PhysicalAABB->GetPosition().X, PhysicalAABB->GetPosition().Y);
     RectangleShape.setFillColor(sf::Color::Red);
 
-    PhysicalAABB->AddObserver(this);
+    PhysicalAABB->AddPositionObserver(this);
+    PhysicalAABB->AddDestructionObserver(this);
 }
 
 void AABB::Draw(sf::RenderWindow& window)
