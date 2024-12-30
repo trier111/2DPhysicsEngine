@@ -3,26 +3,26 @@
 #include "Core/AABBComponent.h"
 
 AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent) : 
-    PhysicalAABB(InAABBComponent)
+	PhysicalAABB(InAABBComponent)
 {
-    if (auto PhysicalAABBShared = PhysicalAABB.lock())
-    {
-        RectangleShape.setSize(sf::Vector2f(PhysicalAABBShared->GetWidth(), PhysicalAABBShared->GetHeight()));
-        RectangleShape.setOrigin(0, 0);
-        RectangleShape.setPosition(PhysicalAABBShared->GetPosition().X, PhysicalAABBShared->GetPosition().Y);
-        RectangleShape.setFillColor(sf::Color::Red);
+	if (auto PhysicalAABBShared = PhysicalAABB.lock())
+	{
+		RectangleShape.setSize(sf::Vector2f(PhysicalAABBShared->GetWidth(), PhysicalAABBShared->GetHeight()));
+		RectangleShape.setOrigin(0, 0);
+		RectangleShape.setPosition(PhysicalAABBShared->GetPosition().X, PhysicalAABBShared->GetPosition().Y);
+		RectangleShape.setFillColor(sf::Color::Red);
 
-        PhysicalAABBShared->AddPositionObserver(this);
-        PhysicalAABBShared->AddDestructionObserver(this);
-    }
+		PhysicalAABBShared->AddPositionObserver(this);
+		PhysicalAABBShared->AddDestructionObserver(this);
+	}
 }
 
 void AABB::Draw(sf::RenderWindow& window)
 {
-    window.draw(RectangleShape);
+	window.draw(RectangleShape);
 }
 
 void AABB::OnRigidBodyPositionUpdated(const FVector2D& NewPosition)
 {
-    RectangleShape.setPosition(NewPosition.X, NewPosition.Y);
+	RectangleShape.setPosition(NewPosition.X, NewPosition.Y);
 }

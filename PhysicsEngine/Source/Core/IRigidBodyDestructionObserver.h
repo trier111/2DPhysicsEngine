@@ -7,6 +7,6 @@ class IRigidBodyDestructionObserver
 
 public:
 
-    virtual void OnRigidBodyDestroyed() = 0;
+	virtual void OnRigidBodyDestroyed() = 0;
 
 };

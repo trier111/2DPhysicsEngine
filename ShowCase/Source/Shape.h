@@ -5,28 +5,28 @@
 
 namespace sf 
 {
-    class RenderWindow;
+	class RenderWindow;
 }
 
 class Shape : public IRigidBodyDestructionObserver
 {
 public:
 
-    Shape();
+	Shape();
 
-    virtual ~Shape() {}
+	virtual ~Shape() {}
 
-    virtual void Draw(sf::RenderWindow& window) = 0;
+	virtual void Draw(sf::RenderWindow& window) = 0;
 
-    bool IsMarkedForDeletion();
+	bool IsMarkedForDeletion();
 
-    void OnRigidBodyDestroyed() override;
+	void OnRigidBodyDestroyed() override;
 
 protected:
 
-    bool bMarkedForDeletion;
+	bool bMarkedForDeletion;
 
-    void MarkForDeletion();
+	void MarkForDeletion();
 
 };
 

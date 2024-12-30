@@ -6,21 +6,21 @@
 class CircleComponent;
 
 class Circle : public Shape,
-    public IRigidBodyPositionObserver
+	public IRigidBodyPositionObserver
 {
 
 public:
 
-    Circle(std::shared_ptr<CircleComponent> InCircleComponent);
+	Circle(std::shared_ptr<CircleComponent> InCircleComponent);
 
-    void Draw(sf::RenderWindow& window) override;
+	void Draw(sf::RenderWindow& window) override;
 
-    void OnRigidBodyPositionUpdated(const FVector2D& NewPosition) override;
+	void OnRigidBodyPositionUpdated(const FVector2D& NewPosition) override;
 
 private:
 
-    std::weak_ptr<CircleComponent> PhysicalCircle;
+	std::weak_ptr<CircleComponent> PhysicalCircle;
 
-    sf::CircleShape CircleShape;
+	sf::CircleShape CircleShape;
 };
 

@@ -6,21 +6,21 @@
 class AABBComponent;
 
 class AABB : public Shape,
-    public IRigidBodyPositionObserver
+	public IRigidBodyPositionObserver
 {
 
 public:
 
-    AABB(std::shared_ptr <AABBComponent> InAABBComponent);
+	AABB(std::shared_ptr <AABBComponent> InAABBComponent);
 
-    void Draw(sf::RenderWindow& window) override;
+	void Draw(sf::RenderWindow& window) override;
 
-    void OnRigidBodyPositionUpdated(const FVector2D& NewPosition) override;
+	void OnRigidBodyPositionUpdated(const FVector2D& NewPosition) override;
 
 private:
 
-    std::weak_ptr<AABBComponent> PhysicalAABB;
+	std::weak_ptr<AABBComponent> PhysicalAABB;
 
-    sf::RectangleShape RectangleShape;
+	sf::RectangleShape RectangleShape;
 
 };

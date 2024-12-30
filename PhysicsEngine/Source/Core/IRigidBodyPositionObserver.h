@@ -7,6 +7,6 @@ class IRigidBodyPositionObserver
 
 public:
 
-    virtual void OnRigidBodyPositionUpdated(const FVector2D& NewPosition) = 0;
+	virtual void OnRigidBodyPositionUpdated(const FVector2D& NewPosition) = 0;
 
 };

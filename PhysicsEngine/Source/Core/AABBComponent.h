@@ -8,28 +8,28 @@ class AABBComponent : public RigidBodyComponent
 
 public:
 
-    AABBComponent(const FVector2D& InSize, const FVector2D& StartPosition);
+	AABBComponent(const FVector2D& InSize, const FVector2D& StartPosition);
 
-    virtual ~AABBComponent() {}
-
-public:
-
-    float GetWidth() const { return Size.X; }
-    float GetHeight() const { return Size.Y; }
-
-    float GetArea() const { return Size.X * Size.Y; }
+	virtual ~AABBComponent() {}
 
 public:
 
-    void CheckCollision(RigidBodyComponent& other) override;
+	float GetWidth() const { return Size.X; }
+	float GetHeight() const { return Size.Y; }
 
-    void CheckCollision(CircleComponent& other) override;
+	float GetArea() const { return Size.X * Size.Y; }
 
-    void CheckCollision(AABBComponent& other) override;
+public:
+
+	void CheckCollision(RigidBodyComponent& other) override;
+
+	void CheckCollision(CircleComponent& other) override;
+
+	void CheckCollision(AABBComponent& other) override;
 
 private:
 
-    FVector2D Size;
+	FVector2D Size;
 
 };
 

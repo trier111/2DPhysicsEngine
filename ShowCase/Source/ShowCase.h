@@ -10,38 +10,38 @@ class ShowCase
 
 public:
 
-    ShowCase();
+	ShowCase();
 
-    void Run();
-
-private:
-
-    sf::RenderWindow Window;
-    sf::Clock Clock;
-    Engine& PhysicsEngine;
-    sf::Font Font;
-    sf::Text DebugText;
+	void Run();
 
 private:
 
-    void ProcessEvents();
-
-    void Update();
-
-    void Render();
-
-    void DrawAllShapes();
-
-    void ClearMarkedShapes();
-
-    void SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic);
-
-    void SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic);
-
-    void SpawnLevel();
+	sf::RenderWindow Window;
+	sf::Clock Clock;
+	Engine& PhysicsEngine;
+	sf::Font Font;
+	sf::Text DebugText;
 
 private:
 
-    std::vector<std::unique_ptr<Shape>> Shapes;
+	void ProcessEvents();
+
+	void Update();
+
+	void Render();
+
+	void DrawAllShapes();
+
+	void ClearMarkedShapes();
+
+	void SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic);
+
+	void SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic);
+
+	void SpawnLevel();
+
+private:
+
+	std::vector<std::unique_ptr<Shape>> Shapes;
 
 };
