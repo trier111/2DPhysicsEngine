@@ -127,5 +127,5 @@ void ShowCase::SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool 
 
 void ShowCase::SpawnLevel()
 {
-    SpawnAABB(FVector2D(300.f, 50.f), FVector2D(650.f, 700.f), false);
+    SpawnAABB(FVector2D(500.f, 50.f), FVector2D(550.f, 700.f), false);
 }
