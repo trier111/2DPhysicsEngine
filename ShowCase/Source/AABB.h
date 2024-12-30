@@ -19,7 +19,7 @@ public:
 
 private:
 
-    AABBComponent* PhysicalAABB;
+    std::weak_ptr<AABBComponent> PhysicalAABB;
 
     sf::RectangleShape RectangleShape;
 

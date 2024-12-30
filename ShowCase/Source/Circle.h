@@ -19,7 +19,7 @@ public:
 
 private:
 
-    CircleComponent* PhysicalCircle;
+    std::weak_ptr<CircleComponent> PhysicalCircle;
 
     sf::CircleShape CircleShape;
 };

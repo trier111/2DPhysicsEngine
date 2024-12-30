@@ -2,16 +2,19 @@
 
 #include "Core/AABBComponent.h"
 
-AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent) : PhysicalAABB(InAABBComponent.get())
+AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent) : 
+    PhysicalAABB(InAABBComponent)
 {
-    RectangleShape.setSize(sf::Vector2f(PhysicalAABB->GetWidth(), PhysicalAABB->GetHeight()));
-    //RectangleShape.setOrigin(PhysicalAABB->GetWidth() / 2, PhysicalAABB->GetHeight() / 2);
-    RectangleShape.setOrigin(0, 0);
-    RectangleShape.setPosition(PhysicalAABB->GetPosition().X, PhysicalAABB->GetPosition().Y);
-    RectangleShape.setFillColor(sf::Color::Red);
+    if (auto PhysicalAABBShared = PhysicalAABB.lock())
+    {
+        RectangleShape.setSize(sf::Vector2f(PhysicalAABBShared->GetWidth(), PhysicalAABBShared->GetHeight()));
+        RectangleShape.setOrigin(0, 0);
+        RectangleShape.setPosition(PhysicalAABBShared->GetPosition().X, PhysicalAABBShared->GetPosition().Y);
+        RectangleShape.setFillColor(sf::Color::Red);
 
-    PhysicalAABB->AddPositionObserver(this);
-    PhysicalAABB->AddDestructionObserver(this);
+        PhysicalAABBShared->AddPositionObserver(this);
+        PhysicalAABBShared->AddDestructionObserver(this);
+    }
 }
 
 void AABB::Draw(sf::RenderWindow& window)
