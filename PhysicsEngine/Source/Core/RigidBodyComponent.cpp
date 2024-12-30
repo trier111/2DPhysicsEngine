@@ -5,7 +5,7 @@
 #include "Core/IRigidBodyDestructionObserver.h"
 
 RigidBodyComponent::RigidBodyComponent()
-    : Mass(1.0f),
+    : Mass(10.0f),
     Velocity(FVector2D(0.0f, 0.0f)),
     Acceleration(FVector2D(0.0f, 0.0f)),
     bIsDynamic(true),
@@ -24,7 +24,7 @@ void RigidBodyComponent::Update(float DeltaTime)
         return;
     }
 
-    Velocity += (Acceleration / Mass) * DeltaTime;
+    Velocity += Acceleration * DeltaTime;
 
     Velocity = Velocity * (1.0f - EngineConfig::DAMPING_FACTOR * DeltaTime);
 
@@ -153,6 +153,11 @@ void RigidBodyComponent::SetPosition(const FVector2D& NewPosition)
 FVector2D RigidBodyComponent::GetVelocity() const
 {
     return Velocity;
+}
+
+void RigidBodyComponent::SetVelocity(const FVector2D& NewVelocity)
+{
+    Velocity = NewVelocity;
 }
 
 void RigidBodyComponent::SetDynamic(bool bDynamic)

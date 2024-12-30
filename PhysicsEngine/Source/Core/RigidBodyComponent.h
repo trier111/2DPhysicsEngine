@@ -29,6 +29,8 @@ public:
 
     FVector2D GetVelocity() const;
 
+    void SetVelocity(const FVector2D& NewVelocity);
+
     void SetMass(float Mass);
 
     float GetMass() const;

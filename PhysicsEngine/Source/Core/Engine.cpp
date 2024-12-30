@@ -162,18 +162,18 @@ void Engine::ResolveCollision(RigidBodyComponent& BodyA, RigidBodyComponent& Bod
         return;
     }
 
-    float Impulse = -(2.0f * VelocityAlongNormal) / (1.0f / MassA + 1.0f / MassB);
+    float ImpulseMagnitude = -VelocityAlongNormal / (1.0f / MassA + 1.0f / MassB);
 
-    FVector2D ImpulseVector = CollisionNormal * Impulse;
+    FVector2D Impulse = CollisionNormal * ImpulseMagnitude;
 
     if (BodyA.IsDynamic())
     {
-        BodyA.ApplyForce(ImpulseVector);
+        BodyA.SetVelocity(BodyA.GetVelocity() + Impulse / MassA);
     }
 
     if (BodyB.IsDynamic())
     {
-        BodyB.ApplyForce(ImpulseVector * -1);
+        BodyB.SetVelocity(BodyB.GetVelocity() - Impulse / MassB);
     }
 }
 
