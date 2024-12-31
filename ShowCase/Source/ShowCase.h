@@ -44,7 +44,9 @@ private:
 
 private:
 
-	bool IsSpawningCircle;
+	bool IsLeftMouseButtonPressed;
+
+	bool IsRightMouseButtonPressed;
 
 	float TimeSinceLastSpawn;
 

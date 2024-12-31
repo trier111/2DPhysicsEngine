@@ -12,7 +12,8 @@
 ShowCase::ShowCase(): 
 	Window(sf::VideoMode(ShowcaseConfig::WINDOW_WIDTH, ShowcaseConfig::WINDOW_HEIGHT), "Showcase with Physics Engine"),
 	PhysicsEngine(Engine::GetInstance()),
-	IsSpawningCircle(false),
+	IsLeftMouseButtonPressed(false),
+	IsRightMouseButtonPressed(false),
 	TimeSinceLastSpawn(0.f)
 {
 	Window.setFramerateLimit(ShowcaseConfig::MAX_FPS);
@@ -50,12 +51,23 @@ void ShowCase::ProcessEvents()
 
 		if (Event.type == sf::Event::MouseButtonPressed && Event.mouseButton.button == sf::Mouse::Left)
 		{
-			IsSpawningCircle = true;
+			IsLeftMouseButtonPressed = true;
 		}
 
 		if (Event.type == sf::Event::MouseButtonReleased && Event.mouseButton.button == sf::Mouse::Left)
 		{
-			IsSpawningCircle = false;
+			IsLeftMouseButtonPressed = false;
+			TimeSinceLastSpawn = 0.0f;
+		}
+
+		if (Event.type == sf::Event::MouseButtonPressed && Event.mouseButton.button == sf::Mouse::Right)
+		{
+			IsRightMouseButtonPressed = true;
+		}
+
+		if (Event.type == sf::Event::MouseButtonReleased && Event.mouseButton.button == sf::Mouse::Right)
+		{
+			IsRightMouseButtonPressed = false;
 			TimeSinceLastSpawn = 0.0f;
 		}
 	}
@@ -76,7 +88,7 @@ void ShowCase::Update()
 
 void ShowCase::TryToSpawnShape(float DeltaTime)
 {
-	if (IsSpawningCircle)
+	if (IsLeftMouseButtonPressed)
 	{
 		TimeSinceLastSpawn += DeltaTime;
 
@@ -87,6 +99,25 @@ void ShowCase::TryToSpawnShape(float DeltaTime)
 			SpawnCircle(10.0f, WorldPosition, true);
 
 			TimeSinceLastSpawn = 0.0f;
+
+			return;
+		}
+	}
+
+	if (IsRightMouseButtonPressed)
+	{
+		TimeSinceLastSpawn += DeltaTime;
+
+		if (TimeSinceLastSpawn >= ShowcaseConfig::SPAWN_COOLDOWN)
+		{
+			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
+			FVector2D WorldPosition(MousePosition.x, MousePosition.y);
+
+			SpawnAABB(FVector2D(50.0f, 50.0f), WorldPosition, true);
+
+			TimeSinceLastSpawn = 0.0f;
+
+			return;
 		}
 	}
 }
