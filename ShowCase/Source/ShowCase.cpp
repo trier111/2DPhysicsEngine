@@ -11,7 +11,9 @@
 
 ShowCase::ShowCase(): 
 	Window(sf::VideoMode(ShowcaseConfig::WINDOW_WIDTH, ShowcaseConfig::WINDOW_HEIGHT), "Showcase with Physics Engine"),
-	PhysicsEngine(Engine::GetInstance())
+	PhysicsEngine(Engine::GetInstance()),
+	IsSpawningCircle(false),
+	TimeSinceLastSpawn(0.f)
 {
 	Window.setFramerateLimit(ShowcaseConfig::MAX_FPS);
 
@@ -48,11 +50,13 @@ void ShowCase::ProcessEvents()
 
 		if (Event.type == sf::Event::MouseButtonPressed && Event.mouseButton.button == sf::Mouse::Left)
 		{
-			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
+			IsSpawningCircle = true;
+		}
 
-			FVector2D WorldPosition(MousePosition.x, MousePosition.y);
-
-			SpawnCircle(10.0f, WorldPosition, true);
+		if (Event.type == sf::Event::MouseButtonReleased && Event.mouseButton.button == sf::Mouse::Left)
+		{
+			IsSpawningCircle = false;
+			TimeSinceLastSpawn = 0.0f;
 		}
 	}
 }
@@ -63,9 +67,28 @@ void ShowCase::Update()
 	PhysicsEngine.Update(DeltaTime);
 	ClearMarkedShapes();
 
+	TryToSpawnShape(DeltaTime);
+
 	std::ostringstream ss;
 	ss << "Delta Time: " << DeltaTime;
 	DebugText.setString(ss.str());
+}
+
+void ShowCase::TryToSpawnShape(float DeltaTime)
+{
+	if (IsSpawningCircle)
+	{
+		TimeSinceLastSpawn += DeltaTime;
+
+		if (TimeSinceLastSpawn >= ShowcaseConfig::SPAWN_COOLDOWN)
+		{
+			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
+			FVector2D WorldPosition(MousePosition.x, MousePosition.y);
+			SpawnCircle(10.0f, WorldPosition, true);
+
+			TimeSinceLastSpawn = 0.0f;
+		}
+	}
 }
 
 void ShowCase::Render() {

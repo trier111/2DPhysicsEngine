@@ -28,6 +28,8 @@ private:
 
 	void Update();
 
+	void TryToSpawnShape(float DeltaTime);
+
 	void Render();
 
 	void DrawAllShapes();
@@ -41,6 +43,10 @@ private:
 	void SpawnLevel();
 
 private:
+
+	bool IsSpawningCircle;
+
+	float TimeSinceLastSpawn;
 
 	std::vector<std::unique_ptr<Shape>> Shapes;
 

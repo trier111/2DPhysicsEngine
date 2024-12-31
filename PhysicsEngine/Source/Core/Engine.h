@@ -47,6 +47,7 @@ private:
 
 	static void PositionalCorrection(RigidBodyComponent& BodyA, RigidBodyComponent& BodyB, const FVector2D& CollisionNormal, float PenetrationDepth);
 
+
 private:
 
 	std::vector<std::shared_ptr<RigidBodyComponent>> RigidBodies;
