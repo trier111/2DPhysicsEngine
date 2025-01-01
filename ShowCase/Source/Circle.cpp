@@ -1,6 +1,7 @@
 #include "Circle.h"
 
 #include "Core/CircleComponent.h"
+#include "ColorUtils.h"
 
 Circle::Circle(std::shared_ptr<CircleComponent> InCircleComponent)
 	: PhysicalCircle(InCircleComponent)
@@ -10,7 +11,7 @@ Circle::Circle(std::shared_ptr<CircleComponent> InCircleComponent)
 		CircleShape.setRadius(PhysicalCircleShared->GetRadius());
 		CircleShape.setOrigin(PhysicalCircleShared->GetRadius(), PhysicalCircleShared->GetRadius());
 		CircleShape.setPosition(PhysicalCircleShared->GetPosition().X, PhysicalCircleShared->GetPosition().Y);
-		CircleShape.setFillColor(sf::Color::Green);
+		CircleShape.setFillColor(ColorUtils::GetRandomPresetColor());
 
 		PhysicalCircleShared->AddPositionObserver(this);
 		PhysicalCircleShared->AddDestructionObserver(this);
