@@ -4,6 +4,7 @@
 #include "Defines.h"
 #include "Core/Engine.h"
 #include "Shape.h"
+#include "ColorUtils.h"
 
 class ShowCase
 {
@@ -36,9 +37,9 @@ private:
 
 	void ClearMarkedShapes();
 
-	void SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic);
+	void SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic, sf::Color InColor = ColorUtils::GetRandomPresetColor());
 
-	void SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic);
+	void SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic, sf::Color InColor = ColorUtils::GetRandomPresetColor());
 
 	void SpawnLevel();
 

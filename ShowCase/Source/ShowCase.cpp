@@ -81,9 +81,7 @@ void ShowCase::Update()
 
 	TryToSpawnShape(DeltaTime);
 
-	std::ostringstream ss;
-	ss << "Delta Time: " << DeltaTime;
-	DebugText.setString(ss.str());
+	DebugText.setString(PhysicsEngine.GetDebugInfo());
 }
 
 void ShowCase::TryToSpawnShape(float DeltaTime)
@@ -96,7 +94,7 @@ void ShowCase::TryToSpawnShape(float DeltaTime)
 		{
 			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
 			FVector2D WorldPosition(MousePosition.x, MousePosition.y);
-			SpawnCircle(10.0f, WorldPosition, true);
+			SpawnCircle(20.0f, WorldPosition, true);
 
 			TimeSinceLastSpawn = 0.0f;
 
@@ -113,7 +111,7 @@ void ShowCase::TryToSpawnShape(float DeltaTime)
 			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
 			FVector2D WorldPosition(MousePosition.x, MousePosition.y);
 
-			SpawnAABB(FVector2D(50.0f, 50.0f), WorldPosition, true);
+			SpawnAABB(FVector2D(25.0f, 25.0f), WorldPosition, true);
 
 			TimeSinceLastSpawn = 0.0f;
 
@@ -157,29 +155,29 @@ void ShowCase::ClearMarkedShapes()
 	}
 }
 
-void ShowCase::SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic)
+void ShowCase::SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic, sf::Color InColor)
 {
 	std::shared_ptr <CircleComponent> NewCircleComponent = PhysicsEngine.CreateCircle(Radius, Position);
 	assert(NewCircleComponent && "Physic Circle Component failed to construct");
 	NewCircleComponent->SetDynamic(IsDynamic);
 
-	auto NewCircle = std::make_unique<Circle>(NewCircleComponent);
+	auto NewCircle = std::make_unique<Circle>(NewCircleComponent, InColor);
 
 	Shapes.push_back(std::move(NewCircle));
 }
 
-void ShowCase::SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic)
+void ShowCase::SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic, sf::Color InColor)
 {
 	std::shared_ptr<AABBComponent> NewAABBComponent = PhysicsEngine.CreateAABB(Size, Position);
 	assert(NewAABBComponent && "Physic Circle Component failed to construct");
 	NewAABBComponent->SetDynamic(IsDynamic);
 
-	auto NewAABB = std::make_unique<AABB>(NewAABBComponent);
+	auto NewAABB = std::make_unique<AABB>(NewAABBComponent, InColor);
 
 	Shapes.push_back(std::move(NewAABB));
 }
 
 void ShowCase::SpawnLevel()
 {
-	SpawnAABB(FVector2D(500.f, 50.f), FVector2D(550.f, 700.f), false);
+	SpawnAABB(FVector2D(500.f, 50.f), FVector2D(550.f, 700.f), false, sf::Color::Red);
 }

@@ -1,6 +1,8 @@
 #include "Engine.h"
 
 #include <cmath>
+#include <string>
+#include <chrono>
 #include "Core/AABBComponent.h"
 #include "Core/CircleComponent.h"
 #include "Core/Defines.h"
@@ -18,7 +20,19 @@ Engine& Engine::GetInstance()
 
 void Engine::Update(float DeltaTime)
 {
+	DebugInfo.Clear();
+
+	DebugInfo.AddInfo("Delta Time:", DeltaTime);
+	DebugInfo.AddInfo("Number of rigid bodies:", RigidBodies.size());
+
+	auto StartTime = std::chrono::high_resolution_clock::now();
+
 	CheckCollisions();
+
+	auto EndTime = std::chrono::high_resolution_clock::now();
+	auto Duration = std::chrono::duration_cast<std::chrono::microseconds>(EndTime - StartTime).count();
+
+	DebugInfo.AddInfo("CheckCollisions time (microseconds):", Duration);
 
 	for (auto it = RigidBodies.begin(); it != RigidBodies.end(); )
 	{
@@ -36,6 +50,11 @@ void Engine::Update(float DeltaTime)
 			++it;
 		}
 	}
+}
+
+std::string Engine::GetDebugInfo() const
+{
+	return DebugInfo.GetDebugInfo();
 }
 
 std::shared_ptr<CircleComponent> Engine::CreateCircle(float Radius, const FVector2D& StartPosition)

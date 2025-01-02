@@ -2,7 +2,9 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 #include "Core/FVector2D.h"
+#include "Core/DebugInfoComponent.h"
 
 class RigidBodyComponent;
 class CircleComponent;
@@ -20,6 +22,8 @@ public:
 public:
 
 	void Update(float DeltaTime);
+
+	std::string GetDebugInfo() const;
 
 	std::shared_ptr<CircleComponent> CreateCircle(float Radius, const FVector2D& StartPosition);
 
@@ -47,6 +51,9 @@ private:
 
 	static void PositionalCorrection(RigidBodyComponent& BodyA, RigidBodyComponent& BodyB, const FVector2D& CollisionNormal, float PenetrationDepth);
 
+private:
+
+	DebugInfoComponent DebugInfo;
 
 private:
 
