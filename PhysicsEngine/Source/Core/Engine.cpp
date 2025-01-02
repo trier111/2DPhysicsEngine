@@ -97,23 +97,37 @@ void Engine::HandleCollision(CircleComponent& Circle1,CircleComponent& Circle2)
 
 void Engine::HandleCollision(AABBComponent& aabb1,AABBComponent& aabb2)
 {
-	const bool isOverlappingX = aabb1.GetPosition().X < aabb2.GetPosition().X + aabb2.GetWidth() &&
-		aabb1.GetPosition().X + aabb1.GetWidth() > aabb2.GetPosition().X;
+	const bool isOverlappingX = std::abs(aabb1.GetCenter().X - aabb2.GetCenter().X) < 
+		(aabb1.GetWidth() + aabb2.GetWidth()) / 2.0f;
 
-	const bool isOverlappingY = aabb1.GetPosition().Y < aabb2.GetPosition().Y + aabb2.GetHeight() &&
-		aabb1.GetPosition().Y + aabb1.GetHeight() > aabb2.GetPosition().Y;
+	const bool isOverlappingY = std::abs(aabb1.GetCenter().Y - aabb2.GetCenter().Y) < 
+		(aabb1.GetHeight() + aabb2.GetHeight()) / 2.0f;
 
 	if (isOverlappingX && isOverlappingY)
 	{
-		float PenetrationDepthX = std::min(aabb1.GetPosition().X + aabb1.GetWidth() - aabb2.GetPosition().X,
-			aabb2.GetPosition().X + aabb2.GetWidth() - aabb1.GetPosition().X);
+		float PenetrationDepthX = (aabb1.GetWidth() + aabb2.GetWidth()) / 2.0f - 
+			std::abs(aabb1.GetCenter().X - aabb2.GetCenter().X);
 
-		float PenetrationDepthY = std::min(aabb1.GetPosition().Y + aabb1.GetHeight() - aabb2.GetPosition().Y,
-			aabb2.GetPosition().Y + aabb2.GetHeight() - aabb1.GetPosition().Y);
+		float PenetrationDepthY = (aabb1.GetHeight() + aabb2.GetHeight()) / 2.0f - 
+			std::abs(aabb1.GetCenter().Y - aabb2.GetCenter().Y);
 
 		float PenetrationDepth = std::min(PenetrationDepthX, PenetrationDepthY);
 
-		FVector2D CollisionNormal = ComputeCollisionNormal(aabb1.GetPosition(), aabb2.GetPosition());
+		FVector2D CollisionNormal;
+		if (PenetrationDepthX < PenetrationDepthY)
+		{
+			CollisionNormal = FVector2D(
+				(aabb1.GetCenter().X > aabb2.GetCenter().X) ? 1.0f : -1.0f,
+				0.0f
+			);
+		}
+		else
+		{
+			CollisionNormal = FVector2D(
+				0.0f,
+				(aabb1.GetCenter().Y > aabb2.GetCenter().Y) ? 1.0f : -1.0f
+			);
+		}
 
 		PositionalCorrection(aabb1, aabb2, CollisionNormal, PenetrationDepth);
 

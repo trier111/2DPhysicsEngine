@@ -17,6 +17,7 @@ public:
 
 	void OnRigidBodyPositionUpdated(const FVector2D& NewPosition) override;
 
+
 private:
 
 	std::weak_ptr<AABBComponent> PhysicalAABB;

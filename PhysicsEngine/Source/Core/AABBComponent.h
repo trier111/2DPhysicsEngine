@@ -14,6 +14,8 @@ public:
 
 public:
 
+	FVector2D GetCenter();
+
 	float GetWidth() const { return Size.X; }
 	float GetHeight() const { return Size.Y; }
 
