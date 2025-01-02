@@ -2,6 +2,7 @@
 
 #include "Shape.h"
 #include "Core/IRigidBodyPositionObserver.h"
+#include "ColorUtils.h"
 
 class CircleComponent;
 
@@ -11,7 +12,7 @@ class Circle : public Shape,
 
 public:
 
-	Circle(std::shared_ptr<CircleComponent> InCircleComponent);
+	Circle(std::shared_ptr<CircleComponent> InCircleComponent, sf::Color InColor);
 
 	void Draw(sf::RenderWindow& window) override;
 

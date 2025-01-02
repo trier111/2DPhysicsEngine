@@ -11,7 +11,7 @@ class AABB : public Shape,
 
 public:
 
-	AABB(std::shared_ptr <AABBComponent> InAABBComponent);
+	AABB(std::shared_ptr <AABBComponent> InAABBComponent, sf::Color InColor);
 
 	void Draw(sf::RenderWindow& window) override;
 

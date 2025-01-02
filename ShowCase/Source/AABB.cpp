@@ -1,9 +1,8 @@
 #include "AABB.h"
 
 #include "Core/AABBComponent.h"
-#include "ColorUtils.h"
 
-AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent) : 
+AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent, sf::Color InColor) :
 	PhysicalAABB(InAABBComponent)
 {
 	if (auto PhysicalAABBShared = PhysicalAABB.lock())
@@ -11,7 +10,7 @@ AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent) :
 		RectangleShape.setSize(sf::Vector2f(PhysicalAABBShared->GetWidth(), PhysicalAABBShared->GetHeight()));
 		RectangleShape.setOrigin(0, 0);
 		RectangleShape.setPosition(PhysicalAABBShared->GetPosition().X, PhysicalAABBShared->GetPosition().Y);
-		RectangleShape.setFillColor(ColorUtils::GetRandomPresetColor());
+		RectangleShape.setFillColor(InColor);
 
 		PhysicalAABBShared->AddPositionObserver(this);
 		PhysicalAABBShared->AddDestructionObserver(this);
