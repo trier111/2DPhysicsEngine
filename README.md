@@ -58,7 +58,7 @@ The project is modular, consisting of two parts:
 - `Scripts/`: Build scripts for setting up the project.
 
 ### Video Demonstration
-A video showcasing the project will be available soon. Stay tuned!
+A video showcasing the project ([YouTube] https://youtu.be/2KQMa_pT268 )
 
 ### License
 - The project is licensed under the **UNLICENSE** (see `UNLICENSE.txt` for details).
