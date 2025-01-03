@@ -1,24 +1,64 @@
-# C++ Project Starter Template
+# 2D Physics Engine
 
-This is a little quick-start project template for C++ projects which utilise a Core/App project architecture. There are two included projects - one called _Core_, and one called _App_. [Premake](https://github.com/premake/premake-core) is used to generate project files.
+This project is a 2D physics engine built in C++ that uses **SFML** for rendering and **Premake** for project configuration. It is designed to simulate basic physics and showcase the engine's capabilities through a simple example application.
 
-Core builds into a static library and is meant to contain common code intended for use in multiple applications. App builds into an executable and links the Core static library, as well as provides an include path to Core's code.
+The project is modular, consisting of two parts:
+1. **PhysicsEngine** - The core physics module, which implements collision detection and physics simulation for AABBs and circles.
+2. **ShowCase** - An application demonstrating the engine's features, such as spawning AABBs and circles by holding the left or right mouse button.
 
-The `Scripts/` directory contains build scripts for Windows and Linux, and the `Vendor/` directory contains Premake binaries (currently version `5.0-beta2`).
+## Features
+- **Physics Simulation**: Supports Axis-Aligned Bounding Boxes (AABBs) and circles.
+- **Collision Detection**: Handles collisions between AABBs and circles.
+- **Integration with SFML**: Uses SFML for rendering and input handling.
+- **Premake Build System**: Easily generate project files for various platforms.
 
 ## Getting Started
-1. Clone this repository or use the "Use this template" button on GitHub to quickly set up your own repository based on this template
-2. `App/` and `Core/` are the two projects - you can edit the names of these folders and their contents to suit
-3. The three included Premake build files are `Build.lua`, `Core/Build-Core.lua` and `App/Build-App.lua` - you can edit these to customise your build configurations, edit the names of your projects and workspace/solution, etc.
-4. Open the `Scripts/` directory and run the appropriate `Setup` script to generate projects files. You can edit the setup scripts to change the type of project that is generated - out of the box they are set to Visual Studio 2022 for Windows and gmake2 for Linux.
 
-Note that no macOS setup script is currently provided; you can duplicate the Linux script and adjust accordingly.
+### Prerequisites
+1. **C++ Compiler**:
+   - Windows: Visual Studio 2022 or later.
+   - Linux: GCC or Clang.
+2. **SFML**: Download and extract SFML ([official site](https://www.sfml-dev.org/).
+3. **Premake**: The project includes Premake binaries (v5.0-beta2) for Windows, macOS, and Linux.
 
-## Included
-- Some example code (in `App/Source` and `Core/Source`) to provide a starting point and test
-- Simple `.gitignore` to ignore project files and binaries
-- Premake binaries for Win/Mac/Linux (`v5.0-beta2`)
+### Steps to Run the Project
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/trier111/2DPhysicsEngine.git
+   cd 2DPhysicsEngine
+   ### Set Up SFML:
+- Update the `SFML_DIR` variable in the `ShowCase/Build-App.lua` file to point to your SFML installation path.
 
-## License
-- UNLICENSE for this repository (see `UNLICENSE.txt` for more details)
-- Premake is licensed under BSD 3-Clause (see included LICENSE.txt file for more details)
+### Generate Project Files:
+- Run the appropriate script from the `Scripts/` directory:
+  - On Windows:
+    ```bash
+    Scripts/Setup-Windows.bat
+    ```
+  - On Linux:
+    ```bash
+    ./Scripts/Setup-Linux.sh
+    ```
+
+### Build the Project:
+- Open the generated solution/project file (e.g., Visual Studio on Windows or Makefiles on Linux) and build the desired configuration (`Debug`, `Release`, or `Dist`).
+
+### Run the ShowCase Application:
+- After building, navigate to the `Binaries/<configuration>/ShowCase` directory and run the executable.
+
+### Example Usage
+- Hold **Left Mouse Button (LMB)** to spawn circles.
+- Hold **Right Mouse Button (RMB)** to spawn AABBs.
+- Observe collision detection and response in real-time.
+
+### Project Structure
+- `PhysicsEngine/`: Core physics engine module (static library).
+- `ShowCase/`: Application module showcasing the engine.
+- `Scripts/`: Build scripts for setting up the project.
+
+### Video Demonstration
+A video showcasing the project will be available soon. Stay tuned!
+
+### License
+- The project is licensed under the **UNLICENSE** (see `UNLICENSE.txt` for details).
+- Premake is licensed under the **BSD 3-Clause License** (see `Vendor/LICENSE.txt`).
