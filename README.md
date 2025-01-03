@@ -18,7 +18,7 @@ The project is modular, consisting of two parts:
 1. **C++ Compiler**:
    - Windows: Visual Studio 2022 or later.
    - Linux: GCC or Clang.
-2. **SFML**: Download and extract SFML ([official site](https://www.sfml-dev.org/).
+2. **SFML**: Download and extract SFML ([official site] https://www.sfml-dev.org/ ).
 3. **Premake**: The project includes Premake binaries (v5.0-beta2) for Windows, macOS, and Linux.
 
 ### Steps to Run the Project
@@ -26,6 +26,7 @@ The project is modular, consisting of two parts:
    ```bash
    git clone https://github.com/trier111/2DPhysicsEngine.git
    cd 2DPhysicsEngine
+   ```
    ### Set Up SFML:
 - Update the `SFML_DIR` variable in the `ShowCase/Build-App.lua` file to point to your SFML installation path.
 
