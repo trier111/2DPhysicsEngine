@@ -8,7 +8,8 @@
 #include "Core/Defines.h"
 
 Engine::Engine() :
-	Gravity(0, EngineConfig::GRAVITY)
+	Gravity(0, EngineConfig::GRAVITY),
+	SpatialHash(EngineConfig::SPATIAL_HASH_CELL_SIZE)
 {
 }
 
@@ -156,15 +157,25 @@ void Engine::HandleCollision(AABBComponent& aabb1,AABBComponent& aabb2)
 
 void Engine::CheckCollisions()
 {
-	for (size_t i = 0; i < RigidBodies.size(); ++i)
+	SpatialHash.Clear();
+
+	for (const auto& Body : RigidBodies)
 	{
-		std::shared_ptr<RigidBodyComponent> BodyA = RigidBodies[i];
+		SpatialHash.Insert(Body->GetPosition(), Body.get());
+	}
 
-		for (size_t j = i + 1; j < RigidBodies.size(); ++j)
+	for (const auto& BodyA : RigidBodies)
+	{
+		FVector2D PositionA = BodyA->GetPosition();
+
+		auto PotentialColliders = SpatialHash.QueryPosition(PositionA);
+
+		for (const auto& BodyB : PotentialColliders)
 		{
-			std::shared_ptr<RigidBodyComponent> BodyB = RigidBodies[j];
-
-			BodyA->CheckCollision(*BodyB);
+			if (BodyA.get() != BodyB)
+			{
+				BodyA->CheckCollision(*BodyB);
+			}
 		}
 	}
 }

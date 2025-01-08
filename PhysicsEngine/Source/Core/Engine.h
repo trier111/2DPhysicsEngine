@@ -5,6 +5,7 @@
 #include <string>
 #include "Core/FVector2D.h"
 #include "Core/DebugInfoComponent.h"
+#include "Core/SpatialHash.h"
 
 class RigidBodyComponent;
 class CircleComponent;
@@ -54,6 +55,7 @@ private:
 private:
 
 	DebugInfoComponent DebugInfo;
+	SpatialHashComponent SpatialHash;
 
 private:
 
