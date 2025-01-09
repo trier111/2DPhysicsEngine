@@ -22,3 +22,13 @@ void CircleComponent::CheckCollision(AABBComponent& other)
 {
 	Engine::HandleCollision(*this, other);
 }
+
+FVector2D CircleComponent::GetPosition() const
+{
+	return Position;
+}
+
+FVector2D CircleComponent::GetSize() const
+{
+	return FVector2D(Radius, Radius);
+}

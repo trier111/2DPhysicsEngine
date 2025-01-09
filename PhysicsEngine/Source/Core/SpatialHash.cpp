@@ -18,37 +18,47 @@ unsigned int SpatialHashComponent::Key(const FVector2D& Position) const
     return (X << XSHIFT) | (Y << YSHIFT);
 }
 
-void SpatialHashComponent::Insert(const FVector2D& Position, RigidBodyComponent* RigidBody)
+void SpatialHashComponent::Insert(const FVector2D& Position, const FVector2D& Size, RigidBodyComponent* RigidBody)
 {
-    auto key = Key(Position);
+    unsigned int centralKey = Key(Position);
+    RigidBodyToCell[RigidBody] = centralKey;
 
-    ÑellToRigidBodies[key].push_back(RigidBody);
-    RigidBodyToCell[RigidBody] = key;
-}
-
-void SpatialHashComponent::UpdatePosition(const FVector2D& Position, RigidBodyComponent* RigidBody)
-{
-    if (RigidBodyToCell.find(RigidBody) != RigidBodyToCell.end())
+    if (Size.X <= CellSize && Size.Y <= CellSize)
     {
-        auto key = RigidBodyToCell[RigidBody];
-        auto& vec = ÑellToRigidBodies[key];
-        vec.erase(std::remove(vec.begin(), vec.end(), RigidBody), vec.end());
+        ÑellToRigidBodies[centralKey].push_back(RigidBody);
     }
+    else
+    {
+        int MinX = static_cast<int>(std::floor((Position.X - Size.X / 2) / CellSize));
+        int MaxX = static_cast<int>(std::floor((Position.X + Size.X / 2) / CellSize));
+        int MinY = static_cast<int>(std::floor((Position.Y - Size.Y / 2) / CellSize));
+        int MaxY = static_cast<int>(std::floor((Position.Y + Size.Y / 2) / CellSize));
 
-    Insert(Position, RigidBody);
+        for (int x = MinX; x <= MaxX; ++x)
+        {
+            for (int y = MinY; y <= MaxY; ++y)
+            {
+                unsigned int key = (x << XSHIFT) | (y << YSHIFT);
+                ÑellToRigidBodies[key].push_back(RigidBody);
+            }
+        }
+    }
 }
 
-std::vector<RigidBodyComponent*> SpatialHashComponent::QueryPosition(const FVector2D& Position) const
+std::vector<RigidBodyComponent*> SpatialHashComponent::QueryPosition(const FVector2D& Position, const FVector2D& Size) const
 {
     std::vector<RigidBodyComponent*> Result;
 
-    unsigned int baseKey = Key(Position);
+    int MinX = static_cast<int>(std::floor((Position.X - Size.X / 2) / CellSize));
+    int MaxX = static_cast<int>(std::floor((Position.X + Size.X / 2) / CellSize));
+    int MinY = static_cast<int>(std::floor((Position.Y - Size.Y / 2) / CellSize));
+    int MaxY = static_cast<int>(std::floor((Position.Y + Size.Y / 2) / CellSize));
 
-    for (int dx = -1; dx <= 1; ++dx)
+    for (int x = MinX - 1; x <= MaxX + 1; ++x)
     {
-        for (int dy = -1; dy <= 1; ++dy)
+        for (int y = MinY - 1; y <= MaxY + 1; ++y)
         {
-            unsigned int NeighborKey = baseKey + (dx << XSHIFT) + (dy << YSHIFT);
+            unsigned int NeighborKey = (x << XSHIFT) | (y << YSHIFT);
 
             auto it = ÑellToRigidBodies.find(NeighborKey);
             if (it != ÑellToRigidBodies.end())

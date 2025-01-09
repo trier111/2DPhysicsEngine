@@ -24,6 +24,10 @@ public:
 
 	float GetRadius() const { return Radius; }
 
+	FVector2D GetPosition() const override;
+
+	FVector2D GetSize() const override;
+
 private:
 
 	float Radius;

@@ -27,6 +27,12 @@ public:
 
 public:
 
+	virtual FVector2D GetPosition() const = 0;
+
+	virtual FVector2D GetSize() const = 0;
+
+public:
+
 	FVector2D GetVelocity() const;
 
 	void SetVelocity(const FVector2D& NewVelocity);
@@ -34,8 +40,6 @@ public:
 	void SetMass(float Mass);
 
 	float GetMass() const;
-
-	FVector2D GetPosition() const;
 
 	void SetPosition(const FVector2D& NewPosition);
 

@@ -76,8 +76,8 @@ std::shared_ptr<AABBComponent> Engine::CreateAABB(const FVector2D& Size, const F
 
 void Engine::HandleCollision(CircleComponent& Circle,AABBComponent& aabb)
 {
-	float ClosestX = std::max(aabb.GetPosition().X, std::min(Circle.GetPosition().X, aabb.GetPosition().X + aabb.GetWidth()));
-	float ClosestY = std::max(aabb.GetPosition().Y, std::min(Circle.GetPosition().Y, aabb.GetPosition().Y + aabb.GetHeight()));
+	float ClosestX = std::max(aabb.GetCornerPosition().X, std::min(Circle.GetPosition().X, aabb.GetCornerPosition().X + aabb.GetWidth()));
+	float ClosestY = std::max(aabb.GetCornerPosition().Y, std::min(Circle.GetPosition().Y, aabb.GetCornerPosition().Y + aabb.GetHeight()));
 
 	float DistanceX = Circle.GetPosition().X - ClosestX;
 	float DistanceY = Circle.GetPosition().Y - ClosestY;
@@ -117,19 +117,19 @@ void Engine::HandleCollision(CircleComponent& Circle1,CircleComponent& Circle2)
 
 void Engine::HandleCollision(AABBComponent& aabb1,AABBComponent& aabb2)
 {
-	const bool isOverlappingX = std::abs(aabb1.GetCenter().X - aabb2.GetCenter().X) < 
+	const bool isOverlappingX = std::abs(aabb1.GetPosition().X - aabb2.GetPosition().X) <
 		(aabb1.GetWidth() + aabb2.GetWidth()) / 2.0f;
 
-	const bool isOverlappingY = std::abs(aabb1.GetCenter().Y - aabb2.GetCenter().Y) < 
+	const bool isOverlappingY = std::abs(aabb1.GetPosition().Y - aabb2.GetPosition().Y) <
 		(aabb1.GetHeight() + aabb2.GetHeight()) / 2.0f;
 
 	if (isOverlappingX && isOverlappingY)
 	{
 		float PenetrationDepthX = (aabb1.GetWidth() + aabb2.GetWidth()) / 2.0f - 
-			std::abs(aabb1.GetCenter().X - aabb2.GetCenter().X);
+			std::abs(aabb1.GetPosition().X - aabb2.GetPosition().X);
 
 		float PenetrationDepthY = (aabb1.GetHeight() + aabb2.GetHeight()) / 2.0f - 
-			std::abs(aabb1.GetCenter().Y - aabb2.GetCenter().Y);
+			std::abs(aabb1.GetPosition().Y - aabb2.GetPosition().Y);
 
 		float PenetrationDepth = std::min(PenetrationDepthX, PenetrationDepthY);
 
@@ -137,7 +137,7 @@ void Engine::HandleCollision(AABBComponent& aabb1,AABBComponent& aabb2)
 		if (PenetrationDepthX < PenetrationDepthY)
 		{
 			CollisionNormal = FVector2D(
-				(aabb1.GetCenter().X > aabb2.GetCenter().X) ? 1.0f : -1.0f,
+				(aabb1.GetPosition().X > aabb2.GetPosition().X) ? 1.0f : -1.0f,
 				0.0f
 			);
 		}
@@ -145,7 +145,7 @@ void Engine::HandleCollision(AABBComponent& aabb1,AABBComponent& aabb2)
 		{
 			CollisionNormal = FVector2D(
 				0.0f,
-				(aabb1.GetCenter().Y > aabb2.GetCenter().Y) ? 1.0f : -1.0f
+				(aabb1.GetPosition().Y > aabb2.GetPosition().Y) ? 1.0f : -1.0f
 			);
 		}
 
@@ -161,14 +161,12 @@ void Engine::CheckCollisions()
 
 	for (const auto& Body : RigidBodies)
 	{
-		SpatialHash.Insert(Body->GetPosition(), Body.get());
+		SpatialHash.Insert(Body->GetPosition(), Body->GetSize(), Body.get());
 	}
 
 	for (const auto& BodyA : RigidBodies)
 	{
-		FVector2D PositionA = BodyA->GetPosition();
-
-		auto PotentialColliders = SpatialHash.QueryPosition(PositionA);
+		auto PotentialColliders = SpatialHash.QueryPosition(BodyA->GetPosition(), BodyA->GetSize());
 
 		for (const auto& BodyB : PotentialColliders)
 		{
