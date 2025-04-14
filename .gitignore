@@ -10,5 +10,7 @@ Binaries/
 *.log
 Makefile
 
+ToDo.txt
+
 # Exclude
 !Vendor/Binaries

@@ -14,7 +14,9 @@ public:
 
 public:
 
-	FVector2D GetCenter();
+	FVector2D GetCornerPosition();
+
+	FVector2D GetPosition() const override;
 
 	float GetWidth() const { return Size.X; }
 	float GetHeight() const { return Size.Y; }

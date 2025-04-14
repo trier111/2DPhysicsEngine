@@ -8,7 +8,7 @@ AABB::AABB(std::shared_ptr <AABBComponent> InAABBComponent, sf::Color InColor) :
 	if (auto PhysicalAABBShared = PhysicalAABB.lock())
 	{
 		RectangleShape.setSize(sf::Vector2f(PhysicalAABBShared->GetWidth(), PhysicalAABBShared->GetHeight()));
-		RectangleShape.setOrigin(0, 0);
+		RectangleShape.setOrigin(PhysicalAABBShared->GetWidth() / 2, PhysicalAABBShared->GetHeight() / 2);
 		RectangleShape.setPosition(PhysicalAABBShared->GetPosition().X, PhysicalAABBShared->GetPosition().Y);
 		RectangleShape.setFillColor(InColor);
 
