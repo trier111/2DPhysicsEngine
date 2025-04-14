@@ -138,6 +138,11 @@ float RigidBodyComponent::GetMass() const
 	return Mass;
 }
 
+FVector2D RigidBodyComponent::GetPosition() const
+{
+	return Position;
+}
+
 void RigidBodyComponent::SetPosition(const FVector2D& NewPosition)
 {
 	Position = NewPosition;

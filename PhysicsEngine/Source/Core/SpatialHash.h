@@ -12,9 +12,11 @@ class SpatialHashComponent
 public:
     SpatialHashComponent(int InitialCellSize);
 
-    void Insert(const FVector2D& Position, const FVector2D& Size, RigidBodyComponent* RigidBody);
+    void Insert(const FVector2D& Position, RigidBodyComponent* RigidBody);
 
-    std::vector<RigidBodyComponent*> QueryPosition(const FVector2D& Position, const FVector2D& Size) const;
+    void UpdatePosition(const FVector2D& Position, RigidBodyComponent* RigidBody);
+
+    std::vector<RigidBodyComponent*> QueryPosition(const FVector2D& Position) const;
 
     bool ContainsKey(const FVector2D& Position) const;
 
