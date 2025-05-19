@@ -29,7 +29,7 @@ public:
 
 	FVector2D GetVelocity() const;
 
-	virtual FVector2D GetPosition() const = 0;
+	FVector2D GetPosition() const;
 
 public:
 

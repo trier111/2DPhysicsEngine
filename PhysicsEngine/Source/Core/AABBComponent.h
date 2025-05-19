@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "RigidBodyComponent.h"
 
 
@@ -14,9 +15,7 @@ public:
 
 public:
 
-	FVector2D GetCornerPosition();
-
-	FVector2D GetPosition() const override;
+	FVector2D GetCenter();
 
 	float GetWidth() const { return Size.X; }
 	float GetHeight() const { return Size.Y; }

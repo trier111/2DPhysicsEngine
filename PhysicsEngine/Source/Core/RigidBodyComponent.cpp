@@ -150,6 +150,11 @@ FVector2D RigidBodyComponent::GetVelocity() const
 	return Velocity;
 }
 
+FVector2D RigidBodyComponent::GetPosition() const
+{
+	return Position;
+}
+
 void RigidBodyComponent::SetVelocity(const FVector2D& NewVelocity)
 {
 	Velocity = NewVelocity;

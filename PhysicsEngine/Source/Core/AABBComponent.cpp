@@ -7,12 +7,7 @@ AABBComponent::AABBComponent(const FVector2D& InSize, const FVector2D& StartPosi
 	Position = StartPosition;
 }
 
-FVector2D AABBComponent::GetCornerPosition()
-{
-	return Position;
-}
-
-FVector2D AABBComponent::GetPosition() const
+FVector2D AABBComponent::GetCenter()
 {
 	return FVector2D(Position.X + Size.X / 2.0f, Position.Y + Size.Y / 2.0f);
 }
@@ -31,3 +26,4 @@ void AABBComponent::CheckCollision(AABBComponent& other)
 {
 	Engine::HandleCollision(*this, other);
 }
+
