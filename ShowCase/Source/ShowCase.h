@@ -6,6 +6,12 @@
 #include "Shape.h"
 #include "ColorUtils.h"
 
+enum class EShapeType
+{
+	Circle,
+	AABB
+};
+
 class ShowCase
 {
 
@@ -37,6 +43,10 @@ private:
 
 	void ClearMarkedShapes();
 
+	void SpawnShape(const FVector2D& Position, bool IsDynamic);
+
+	void SpawnShapeSpanwer(const FVector2D& Position, EShapeType Shape);
+
 	void SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic, sf::Color InColor = ColorUtils::GetRandomPresetColor());
 
 	void SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic, sf::Color InColor = ColorUtils::GetRandomPresetColor());
@@ -50,6 +60,8 @@ private:
 	bool IsRightMouseButtonPressed;
 
 	float TimeSinceLastSpawn;
+
+	EShapeType CurrentShape;
 
 	std::vector<std::unique_ptr<Shape>> Shapes;
 

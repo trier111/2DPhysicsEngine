@@ -14,7 +14,8 @@ ShowCase::ShowCase():
 	PhysicsEngine(Engine::GetInstance()),
 	IsLeftMouseButtonPressed(false),
 	IsRightMouseButtonPressed(false),
-	TimeSinceLastSpawn(0.f)
+	TimeSinceLastSpawn(0.f),
+	CurrentShape(EShapeType::Circle)
 {
 	Window.setFramerateLimit(ShowcaseConfig::MAX_FPS);
 
@@ -70,6 +71,7 @@ void ShowCase::ProcessEvents()
 			IsRightMouseButtonPressed = false;
 			TimeSinceLastSpawn = 0.0f;
 		}
+		//TODO events for changing shapes
 	}
 }
 
@@ -95,7 +97,7 @@ void ShowCase::TryToSpawnShape(float DeltaTime)
 			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
 			sf::Vector2f WorldCoords = Window.mapPixelToCoords(MousePosition);
 			FVector2D WorldPosition(WorldCoords.x, WorldCoords.y);
-			SpawnCircle(20.0f, WorldPosition, true);
+			SpawnShape(WorldPosition, true);
 
 			TimeSinceLastSpawn = 0.0f;
 
@@ -112,7 +114,7 @@ void ShowCase::TryToSpawnShape(float DeltaTime)
 			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
 			sf::Vector2f WorldCoords = Window.mapPixelToCoords(MousePosition);
 			FVector2D WorldPosition(WorldCoords.x, WorldCoords.y);
-			SpawnAABB(FVector2D(25.0f, 25.0f), WorldPosition, true);
+			SpawnShapeSpanwer(WorldPosition, CurrentShape);
 
 			TimeSinceLastSpawn = 0.0f;
 
@@ -156,6 +158,24 @@ void ShowCase::ClearMarkedShapes()
 	}
 }
 
+void ShowCase::SpawnShape(const FVector2D& Position, bool IsDynamic)
+{
+	switch (CurrentShape)
+	{
+	case EShapeType::Circle:
+		SpawnCircle(ShowcaseConfig::DEFAULT_CIRCLE_RADIUS , Position, IsDynamic);
+		break;
+
+	case EShapeType::AABB:
+		SpawnAABB(FVector2D(ShowcaseConfig::DEFAULT_AABB_SIZE, ShowcaseConfig::DEFAULT_AABB_SIZE), Position, IsDynamic);
+		break;
+	}
+}
+
+void ShowCase::SpawnShapeSpanwer(const FVector2D& Position, EShapeType Shape)
+{
+}
+
 void ShowCase::SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic, sf::Color InColor)
 {
 	std::shared_ptr <CircleComponent> NewCircleComponent = PhysicsEngine.CreateCircle(Radius, Position);
@@ -170,7 +190,7 @@ void ShowCase::SpawnCircle(float Radius, const FVector2D& Position, bool IsDynam
 void ShowCase::SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool IsDynamic, sf::Color InColor)
 {
 	std::shared_ptr<AABBComponent> NewAABBComponent = PhysicsEngine.CreateAABB(Size, Position);
-	assert(NewAABBComponent && "Physic Circle Component failed to construct");
+	assert(NewAABBComponent && "Physic AABB Component failed to construct");
 	NewAABBComponent->SetDynamic(IsDynamic);
 
 	auto NewAABB = std::make_unique<AABB>(NewAABBComponent, InColor);
