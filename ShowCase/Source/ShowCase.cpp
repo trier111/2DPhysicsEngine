@@ -93,7 +93,8 @@ void ShowCase::TryToSpawnShape(float DeltaTime)
 		if (TimeSinceLastSpawn >= ShowcaseConfig::SPAWN_COOLDOWN)
 		{
 			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
-			FVector2D WorldPosition(MousePosition.x, MousePosition.y);
+			sf::Vector2f WorldCoords = Window.mapPixelToCoords(MousePosition);
+			FVector2D WorldPosition(WorldCoords.x, WorldCoords.y);
 			SpawnCircle(20.0f, WorldPosition, true);
 
 			TimeSinceLastSpawn = 0.0f;
@@ -109,8 +110,8 @@ void ShowCase::TryToSpawnShape(float DeltaTime)
 		if (TimeSinceLastSpawn >= ShowcaseConfig::SPAWN_COOLDOWN)
 		{
 			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
-			FVector2D WorldPosition(MousePosition.x, MousePosition.y);
-
+			sf::Vector2f WorldCoords = Window.mapPixelToCoords(MousePosition);
+			FVector2D WorldPosition(WorldCoords.x, WorldCoords.y);
 			SpawnAABB(FVector2D(25.0f, 25.0f), WorldPosition, true);
 
 			TimeSinceLastSpawn = 0.0f;
