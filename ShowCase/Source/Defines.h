@@ -8,7 +8,8 @@ namespace ShowcaseConfig
 
 	constexpr float MAX_FPS = 60.0f;
 
-	constexpr float SPAWN_COOLDOWN = 0.1f;
+	constexpr float SPAWN_COOLDOWN_USER = 0.1f;
+	constexpr float SPAWN_COOLDOWN_SPAWNER = 0.2f;
 	constexpr float DEFAULT_CIRCLE_RADIUS = 20.f;
 	constexpr float DEFAULT_AABB_SIZE = 30.f;
 

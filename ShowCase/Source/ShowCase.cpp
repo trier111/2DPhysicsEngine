@@ -9,11 +9,12 @@
 #include <sstream>
 #include <cassert>
 
+#define ENABLE_BENCHMARK_SPAWNERS 1
+
 ShowCase::ShowCase(): 
 	Window(sf::VideoMode(ShowcaseConfig::WINDOW_WIDTH, ShowcaseConfig::WINDOW_HEIGHT), "Showcase with Physics Engine"),
 	PhysicsEngine(Engine::GetInstance()),
 	IsLeftMouseButtonPressed(false),
-	IsRightMouseButtonPressed(false),
 	TimeSinceLastSpawn(0.f),
 	CurrentShape(EShapeType::Circle)
 {
@@ -63,15 +64,23 @@ void ShowCase::ProcessEvents()
 
 		if (Event.type == sf::Event::MouseButtonPressed && Event.mouseButton.button == sf::Mouse::Right)
 		{
-			IsRightMouseButtonPressed = true;
+			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
+			sf::Vector2f WorldCoords = Window.mapPixelToCoords(MousePosition);
+			FVector2D WorldPosition(WorldCoords.x, WorldCoords.y);
+			SpawnShapeSpanwer(WorldPosition, CurrentShape);
 		}
 
-		if (Event.type == sf::Event::MouseButtonReleased && Event.mouseButton.button == sf::Mouse::Right)
+		if (Event.type == sf::Event::KeyPressed)
 		{
-			IsRightMouseButtonPressed = false;
-			TimeSinceLastSpawn = 0.0f;
+			if (Event.key.code == sf::Keyboard::Num1)
+			{
+				CurrentShape = EShapeType::Circle;
+			}
+			else if (Event.key.code == sf::Keyboard::Num2)
+			{
+				CurrentShape = EShapeType::AABB;
+			}
 		}
-		//TODO events for changing shapes
 	}
 }
 
@@ -82,8 +91,22 @@ void ShowCase::Update()
 	ClearMarkedShapes();
 
 	TryToSpawnShape(DeltaTime);
+	UpdateShapeSpawners(DeltaTime);
 
 	DebugText.setString(PhysicsEngine.GetDebugInfo());
+}
+
+void ShowCase::UpdateShapeSpawners(float DeltaTime)
+{
+	for (auto& ShapeSpawner : ShapeSpawners)
+	{
+		ShapeSpawner.Timer += DeltaTime;
+		if (ShapeSpawner.Timer >= ShowcaseConfig::SPAWN_COOLDOWN_SPAWNER)
+		{
+			SpawnShape(ShapeSpawner.Location, true, ShapeSpawner.ShapeToSpawn);
+			ShapeSpawner.Timer = 0;
+		}
+	}
 }
 
 void ShowCase::TryToSpawnShape(float DeltaTime)
@@ -92,29 +115,12 @@ void ShowCase::TryToSpawnShape(float DeltaTime)
 	{
 		TimeSinceLastSpawn += DeltaTime;
 
-		if (TimeSinceLastSpawn >= ShowcaseConfig::SPAWN_COOLDOWN)
+		if (TimeSinceLastSpawn >= ShowcaseConfig::SPAWN_COOLDOWN_USER)
 		{
 			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
 			sf::Vector2f WorldCoords = Window.mapPixelToCoords(MousePosition);
 			FVector2D WorldPosition(WorldCoords.x, WorldCoords.y);
-			SpawnShape(WorldPosition, true);
-
-			TimeSinceLastSpawn = 0.0f;
-
-			return;
-		}
-	}
-
-	if (IsRightMouseButtonPressed)
-	{
-		TimeSinceLastSpawn += DeltaTime;
-
-		if (TimeSinceLastSpawn >= ShowcaseConfig::SPAWN_COOLDOWN)
-		{
-			sf::Vector2i MousePosition = sf::Mouse::getPosition(Window);
-			sf::Vector2f WorldCoords = Window.mapPixelToCoords(MousePosition);
-			FVector2D WorldPosition(WorldCoords.x, WorldCoords.y);
-			SpawnShapeSpanwer(WorldPosition, CurrentShape);
+			SpawnShape(WorldPosition, true, CurrentShape);
 
 			TimeSinceLastSpawn = 0.0f;
 
@@ -158,9 +164,9 @@ void ShowCase::ClearMarkedShapes()
 	}
 }
 
-void ShowCase::SpawnShape(const FVector2D& Position, bool IsDynamic)
+void ShowCase::SpawnShape(const FVector2D& Position, bool IsDynamic, EShapeType ShapeToSpawn)
 {
-	switch (CurrentShape)
+	switch (ShapeToSpawn)
 	{
 	case EShapeType::Circle:
 		SpawnCircle(ShowcaseConfig::DEFAULT_CIRCLE_RADIUS , Position, IsDynamic);
@@ -174,6 +180,7 @@ void ShowCase::SpawnShape(const FVector2D& Position, bool IsDynamic)
 
 void ShowCase::SpawnShapeSpanwer(const FVector2D& Position, EShapeType Shape)
 {
+	ShapeSpawners.push_back(ShapeSpawner(Position, 0.f, Shape));
 }
 
 void ShowCase::SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic, sf::Color InColor)
@@ -200,5 +207,17 @@ void ShowCase::SpawnAABB(const FVector2D& Size, const FVector2D& Position, bool 
 
 void ShowCase::SpawnLevel()
 {
-	SpawnAABB(FVector2D(500.f, 50.f), FVector2D(550.f, 700.f), false, sf::Color::Red);
+	SpawnAABB(FVector2D(500.f, 25.f), FVector2D(100.f, 800.f), false, sf::Color::Red);
+	SpawnAABB(FVector2D(500.f, 25.f), FVector2D(700.f, 800.f), false, sf::Color::Red);
+	SpawnAABB(FVector2D(500.f, 25.f), FVector2D(1300.f, 800.f), false, sf::Color::Red);
+
+#if ENABLE_BENCHMARK_SPAWNERS
+	SpawnShapeSpanwer(FVector2D(350.f, 150), EShapeType::Circle);
+	SpawnShapeSpanwer(FVector2D(325.f, 300), EShapeType::Circle);
+	SpawnShapeSpanwer(FVector2D(950.f, 150), EShapeType::Circle);
+	SpawnShapeSpanwer(FVector2D(925.f, 300), EShapeType::Circle);
+	SpawnShapeSpanwer(FVector2D(1550.f, 150), EShapeType::Circle);
+	SpawnShapeSpanwer(FVector2D(1525.f, 300), EShapeType::Circle);
+#endif
+
 }

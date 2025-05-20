@@ -8,7 +8,8 @@
 #include "Core/Defines.h"
 
 Engine::Engine() :
-	Gravity(0, EngineConfig::GRAVITY)
+	Gravity(0, EngineConfig::GRAVITY),
+	TimeFromStart(0.f)
 {
 }
 
@@ -22,6 +23,8 @@ void Engine::Update(float DeltaTime)
 {
 	DebugInfo.Clear();
 
+	TimeFromStart += DeltaTime;
+	DebugInfo.AddInfo("Time:", TimeFromStart);
 	DebugInfo.AddInfo("Delta Time:", DeltaTime);
 	DebugInfo.AddInfo("Number of rigid bodies:", RigidBodies.size());
 

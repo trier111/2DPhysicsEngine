@@ -5,11 +5,13 @@
 #include "Core/Engine.h"
 #include "Shape.h"
 #include "ColorUtils.h"
+#include "Core/EShapeType.h"
 
-enum class EShapeType
+struct ShapeSpawner
 {
-	Circle,
-	AABB
+	FVector2D Location;
+	float Timer;
+	EShapeType ShapeToSpawn;
 };
 
 class ShowCase
@@ -43,9 +45,11 @@ private:
 
 	void ClearMarkedShapes();
 
-	void SpawnShape(const FVector2D& Position, bool IsDynamic);
+	void SpawnShape(const FVector2D& Position, bool IsDynamic, EShapeType ShapeToSpawn);
 
 	void SpawnShapeSpanwer(const FVector2D& Position, EShapeType Shape);
+
+	void UpdateShapeSpawners(float DeltaTime);
 
 	void SpawnCircle(float Radius, const FVector2D& Position, bool IsDynamic, sf::Color InColor = ColorUtils::GetRandomPresetColor());
 
@@ -57,12 +61,11 @@ private:
 
 	bool IsLeftMouseButtonPressed;
 
-	bool IsRightMouseButtonPressed;
-
 	float TimeSinceLastSpawn;
 
 	EShapeType CurrentShape;
 
 	std::vector<std::unique_ptr<Shape>> Shapes;
 
+	std::vector<ShapeSpawner> ShapeSpawners;
 };

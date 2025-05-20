@@ -55,6 +55,8 @@ private:
 
 	DebugInfoComponent DebugInfo;
 
+	float TimeFromStart;
+
 private:
 
 	std::vector<std::shared_ptr<RigidBodyComponent>> RigidBodies;
